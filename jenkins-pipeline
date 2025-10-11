@@ -1,0 +1,62 @@
+pipeline {
+    agent any
+    environment {
+        SCANNER_HOME = tool 'mysonar'
+    }
+    stages {
+        stage("CleanWS") {
+            steps {
+                cleanWs()
+            }
+        }
+        stage("Code") {
+            steps {
+                git url: 'https://github.com/thrineshjogu/Blood-Bank.git'
+            }
+        }
+        stage("SonarQube Analysis") {
+            steps {
+                withSonarQubeEnv('mysonar') {
+                    sh """
+                        ${SCANNER_HOME}/bin/sonar-scanner \
+                        -Dsonar.projectName=zomato \
+                        -Dsonar.projectKey=zomato
+                    """
+                }
+            }
+        }
+        stage("Quality Gates") {
+            steps {
+                script {
+                    waitForQualityGate abortPipeline: false, credentialsId: 'sonar-token'
+                }
+            }
+        }
+        stage("Images") {
+            steps {
+                sh 'docker build -t appimage .'
+                sh 'docker build -t dbimage database/'
+            }
+        }
+        stage("Scan Images") {
+            steps {
+                sh 'trivy image appimage'
+                sh 'trivy image dbimage'
+            }
+        }
+        stage("Tag & Push") {
+            steps {
+                script {
+                    withDockerRegistry(credentialsId: 'dockerhub') {
+                        sh '''
+                            docker tag dbimage thrineshjogu/Blood-Bank:dbimage
+                            docker tag appimage thrineshjogu/Blood-Bank:appimage
+                            docker push thrineshjogu/Blood-Bank:dbimage
+                            docker push thrineshjogu/Blood-Bank:appimage
+                        '''
+                    }
+                }
+            }
+        }
+    }
+}
