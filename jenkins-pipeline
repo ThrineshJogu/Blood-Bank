@@ -11,7 +11,7 @@ pipeline {
         }
         stage("Code") {
             steps {
-                git url: 'https://github.com/thrineshjogu/Blood-Bank.git'
+                git url: 'https://github.com/ThrineshJogu/Blood-Bank.git'
             }
         }
         stage("SonarQube Analysis") {
