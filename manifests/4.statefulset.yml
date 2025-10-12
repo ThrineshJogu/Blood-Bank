@@ -4,7 +4,7 @@ kind: StatefulSet
 metadata:
   name: mysql
 spec:
-  serviceName: "mysql"
+  serviceName: "mysqldb"
   replicas: 1
   selector:
     matchLabels:
@@ -23,6 +23,22 @@ spec:
           volumeMounts:
             - name: mysql-storage
               mountPath: /var/lib/mysql
+          readinessProbe:
+            exec:
+              command:
+                - sh
+                - -c
+                - "mysqladmin ping -h 127.0.0.1"
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          livenessProbe:
+            exec:
+              command:
+                - sh
+                - -c
+                - "mysqladmin ping -h 127.0.0.1"
+            initialDelaySeconds: 30
+            periodSeconds: 20
       imagePullSecrets:
         - name: mysecret
   volumeClaimTemplates:
