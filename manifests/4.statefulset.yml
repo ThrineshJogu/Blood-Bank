@@ -18,16 +18,16 @@ spec:
       - name: nginx
         image: thrineshjogu/blood-bank:dbimage
         ports:
-        - containerPort: 80
+        - containerPort: 3306
           name: web
         volumeMounts:
-        - name: www
+        - name: myvolume
           mountPath: /usr/share/nginx/html
       imagePullSecrets:
             - name: mysecret
   volumeClaimTemplates:
   - metadata:
-      name: www
+      name: myvolume
     spec:
       accessModes: [ "ReadWriteOnce" ]
       resources:
