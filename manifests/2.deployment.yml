@@ -16,7 +16,7 @@ spec:
         app: nginx
     spec:
       containers:
-      - name: mysqldb
+      - name: app
         image: thrineshjogu/blood-bank:appimage
         ports:
         - containerPort: 80
