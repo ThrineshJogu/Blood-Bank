@@ -18,7 +18,7 @@ spec:
       - name: nginx
         image: thrineshjogu/blood-bank:dbimage
         ports:
-        - containerPort: 3306
+        - containerPort: 80
           name: web
         volumeMounts:
         - name: myvolume
