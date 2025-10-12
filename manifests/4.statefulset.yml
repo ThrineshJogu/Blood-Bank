@@ -21,13 +21,13 @@ spec:
         - containerPort: 3306
         
         volumeMounts:
-        - name: myvolume
+        - name: www
           mountPath: /usr/share/nginx/html
       imagePullSecrets:
             - name: mysecret
   volumeClaimTemplates:
   - metadata:
-      name: myvolume
+      name: www
     spec:
       accessModes: [ "ReadWriteOnce" ]
       resources:
