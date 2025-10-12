@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: nginx
-        image: thrineshjogu/Blood-Bank:dbimage
+        image: thrineshjogu/blood-bank:dbimage
         ports:
         - containerPort: 80
           name: web
