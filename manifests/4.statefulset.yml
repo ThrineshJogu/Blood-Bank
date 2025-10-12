@@ -18,8 +18,8 @@ spec:
       - name: nginx
         image: thrineshjogu/blood-bank:dbimage
         ports:
-        - containerPort: 80
-          name: web
+        - containerPort: 3306
+          
         volumeMounts:
         - name: www
           mountPath: /usr/share/nginx/html
