@@ -16,12 +16,19 @@ spec:
         app: nginx
     spec:
       containers:
-      - name: mysqldb
-        image: thrineshjogu/blood-bank:appimage
-        ports:
-        - containerPort: 80
-        env:
+        - name: app-container
+          image: thrineshjogu/blood-bank:appimage
+          ports:
+            - containerPort: 80
+          env:
             - name: DB_HOST
               value: mysqldb
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "128Mi"
+            limits:
+              cpu: "200m"
+              memory: "256Mi"
       imagePullSecrets:
-            - name: mysecret
+        - name: mysecret
