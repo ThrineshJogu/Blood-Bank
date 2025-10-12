@@ -4,7 +4,7 @@ kind: StatefulSet
 metadata:
   name: mysql
 spec:
-  serviceName: "mysqldb"
+  serviceName: "mysql"
   replicas: 1
   selector:
     matchLabels:
@@ -15,37 +15,21 @@ spec:
         app: app-database
     spec:
       containers:
-        - name: mysql
-          image: thrineshjogu/blood-bank:dbimage
-          ports:
-            - containerPort: 3306
-              name: mysql
-          volumeMounts:
-            - name: mysql-storage
-              mountPath: /usr/share/nginx/html
-          readinessProbe:
-            exec:
-              command:
-                - sh
-                - -c
-                - "mysqladmin ping -h 127.0.0.1"
-            initialDelaySeconds: 10
-            periodSeconds: 10
-          livenessProbe:
-            exec:
-              command:
-                - sh
-                - -c
-                - "mysqladmin ping -h 127.0.0.1"
-            initialDelaySeconds: 30
-            periodSeconds: 20
+      - name: nginx
+        image: thrineshjogu/blood-bank:dbimage
+        ports:
+        - containerPort: 80
+          name: web
+        volumeMounts:
+        - name: www
+          mountPath: /usr/share/nginx/html
       imagePullSecrets:
-        - name: mysecret
+            - name: mysecret
   volumeClaimTemplates:
-    - metadata:
-        name: mysql-storage
-      spec:
-        accessModes: ["ReadWriteOnce"]
-        resources:
-          requests:
-            storage: 1Gi
+  - metadata:
+      name: www
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      resources:
+        requests:
+          storage: 1Gi
